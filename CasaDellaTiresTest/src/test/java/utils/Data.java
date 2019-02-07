@@ -9,5 +9,7 @@ public abstract class Data {
 	public static final String passwordAdmin = "admin123";
 	public static final String userOperador = "josedev";
 	public static final String passwordOperador = "12345678";
+	public static final int cedula = 1311;
+	public static final String placa = "QWE789";
 	
 }

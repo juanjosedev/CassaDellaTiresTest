@@ -36,4 +36,8 @@ public abstract class BasePage {
 		return getDriver().findElement(selector).getText();
 	}
 	
+	public String getText(By selector) {
+		return getDriver().findElement(selector).getText();
+	}
+	
 }

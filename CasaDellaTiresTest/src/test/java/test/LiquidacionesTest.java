@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -47,7 +48,7 @@ public class LiquidacionesTest {
 		ip = new InicioPage(driver);
 		lp = ip.getMenu().goToLiquidaciones();
 		lp.pressNuevaLiquidacionModalButton();
-		lp.enterCedula(1321);
+		lp.enterCedula(Data.cedula);
 		lp.enterPlaca(""); // necesario para que muestre el alerta de la cédula
 		
 		String expected = "Cédula correcta";
@@ -83,7 +84,7 @@ public class LiquidacionesTest {
 		ip = new InicioPage(driver);
 		lp = ip.getMenu().goToLiquidaciones();
 		lp.pressNuevaLiquidacionModalButton();
-		lp.enterPlaca("qwe789");
+		lp.enterPlaca(Data.placa);
 		lp.enterCedula(0);
 		
 		String expected = "Placa correcta";
@@ -101,7 +102,7 @@ public class LiquidacionesTest {
 		ip = new InicioPage(driver);
 		lp = ip.getMenu().goToLiquidaciones();
 		lp.pressNuevaLiquidacionModalButton();
-		lp.enterPlaca("qwe789");
+		lp.enterPlaca("abc123");
 		lp.enterCedula(0);
 		
 		String expected = "La placa no existe";
@@ -118,7 +119,29 @@ public class LiquidacionesTest {
 	
 	@Test
 	public void CP_006_VerificarHoraInicio() {
-		fail("Áún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		lp = ip.getMenu().goToLiquidaciones();
+		lp.pressNuevaLiquidacionModalButton();
+		lp.enterPlaca(Data.placa);
+		lp.enterCedula(Data.cedula);
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
+		lp.pressCrearLiquidacionButton();
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		int hourExpected = calendar.get(Calendar.HOUR_OF_DAY);
+		int hourActual = Integer.parseInt(lp.getText(By.id("info_hora_actual")).substring(0, 2));
+		
+		assertEquals(hourExpected, hourActual);
+		
+		float minuteExpected = calendar.get(Calendar.MINUTE);
+		float minuteActual = Float.parseFloat(lp.getText(By.id("info_hora_actual")).substring(3, 5));
+		
+		assertEquals(minuteExpected, minuteActual, 1);
+		
 	}
 	
 	@Test
@@ -128,17 +151,61 @@ public class LiquidacionesTest {
 	
 	@Test
 	public void CP_008_VerificarSubtotal() {
-		fail("Áún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		lp = ip.getMenu().goToLiquidaciones();
+		lp.pressNuevaLiquidacionModalButton();
+		lp.enterPlaca(Data.placa);
+		lp.enterCedula(Data.cedula);
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
+		
+		int expected = 22000;
+		int actual = Integer.parseInt(lp.getText(By.id("valor_subtotal")));
+		
+		assertEquals(expected, actual);
+		
 	}
 	
 	@Test
 	public void CP_009_VerificarAplicacionDelDescuento() {
-		fail("Áún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		lp = ip.getMenu().goToLiquidaciones();
+		lp.pressNuevaLiquidacionModalButton();
+		lp.enterPlaca(Data.placa);
+		lp.enterCedula(Data.cedula);
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"107\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"111\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"117\"]"));
+		
+		int expected = 22000 + 20000 + 38000;
+		int actual = Integer.parseInt(lp.getText(By.id("valor_descuento")));
+		
+		assertEquals(expected, actual);
+		
 	}
 	
 	@Test
 	public void CP_010_VerificarTotal() {
-		fail("Áún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		lp = ip.getMenu().goToLiquidaciones();
+		lp.pressNuevaLiquidacionModalButton();
+		lp.enterPlaca(Data.placa);
+		lp.enterCedula(Data.cedula);
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"111\"]"));
+		
+		int expected = 22000 + 20000;
+		int actual = Integer.parseInt(lp.getText(By.id("valor_total")));
+		
 	}
 	
 	@Test
