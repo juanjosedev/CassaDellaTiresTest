@@ -206,6 +206,8 @@ public class LiquidacionesTest {
 		int expected = 22000 + 20000;
 		int actual = Integer.parseInt(lp.getText(By.id("valor_total")));
 		
+		assertEquals(expected, actual);
+		
 	}
 	
 	@Test
