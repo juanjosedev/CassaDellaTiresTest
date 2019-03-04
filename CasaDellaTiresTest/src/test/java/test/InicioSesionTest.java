@@ -39,11 +39,11 @@ public class InicioSesionTest {
 	public void CP_001_IngresoUsuarioExistente() {
 		
 		isp = new InicioSesionPage(driver);
-		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		isp.sendForm("admin", "admin123");
 		ip = new InicioPage(driver);
 		
-		String expected = "Inicio";
-		String actual = ip.getTitle();
+		String expected = "Admin";
+		String actual = ip.getText(By.xpath("//*[@id=\"tipo_usuario\"]"));
 		
 		ip.getMenu().cerrarSesion();
 		
@@ -55,23 +55,65 @@ public class InicioSesionTest {
 	public void CP_002_IngresoUsuarioNoExistente() {
 		
 		isp = new InicioSesionPage(driver);
-		isp.sendForm("usuarionoexistente", "password");
+		isp.sendForm("usuarionoexistente", "admin123");
 		
 		String expected = "usuario o contraseña incorrectas";
-		String actual = isp.getErrorMessage().toLowerCase();
+		String actual = isp.getAlertMessage(By.id("alert_error")).toLowerCase();
 		
 		assertEquals(expected, actual);
 		
 	}
 	
 	@Test
-	public void CP_007_VerificarObligatoriedadCampoUsuario() {
+	public void CP_003_IngresoContrasenaExistente() {
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm("admin", "admin123");
+		ip = new InicioPage(driver);
+		
+		String expected = "Admin";
+		String actual = ip.getText(By.xpath("//*[@id=\"tipo_usuario\"]"));
+		
+		ip.getMenu().cerrarSesion();
+		
+		assertTrue(actual.contains(expected));
+		
+	}
+	
+	@Test
+	public void CP_004_IngresoContrasenaIncorrecta() {
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm("admin", "contrasenaincorrecta");
+	
+		String expected = "usuario o contraseña incorrectas";
+		String actual = isp.getAlertMessage(By.id("alert_error")).toLowerCase();
+		
+		assertEquals(expected, actual);
+		
+	}
+	
+	@Test
+	public void CP_005_VerificarObligatoriedadCampoUsuario() {
 		
 		isp = new InicioSesionPage(driver);
 		isp.sendForm("", "password");
 		
 		String expected = "campo obligatorio";
 		String actual = isp.getAlertMessage(By.id("alert_obligatorio_usuario")).toLowerCase();
+		
+		assertTrue(actual.contains(expected));
+		
+	}
+	
+	@Test
+	public void CP_006_VerificarObligatoriedadCampoContrasena() {
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm("username", "");
+		
+		String expected = "campo obligatorio";
+		String actual = isp.getAlertMessage(By.id("alert_obligatorio_clave")).toLowerCase();
 		
 		assertTrue(actual.contains(expected));
 		

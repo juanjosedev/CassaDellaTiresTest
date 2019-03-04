@@ -72,7 +72,7 @@ public class LiquidacionesTest {
 		String expected = "La cédula no existe";
 		String actual = lp.getAlertMessage(By.id("art_cc_no_existe"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
@@ -108,7 +108,7 @@ public class LiquidacionesTest {
 		String expected = "La placa no existe";
 		String actual = lp.getAlertMessage(By.id("art_placa_no_existe"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
@@ -127,18 +127,20 @@ public class LiquidacionesTest {
 		lp.pressNuevaLiquidacionModalButton();
 		lp.enterPlaca(Data.placa);
 		lp.enterCedula(Data.cedula);
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"132\"]"));
 		lp.pressCrearLiquidacionButton();
 		
 		Calendar calendar = Calendar.getInstance();
 		
+		String hourStr = lp.getText(By.id("info_hora_actual"));
+		
 		int hourExpected = calendar.get(Calendar.HOUR_OF_DAY);
-		int hourActual = Integer.parseInt(lp.getText(By.id("info_hora_actual")).substring(0, 2));
+		int hourActual = Integer.parseInt(hourStr.substring(0, 2));
 		
 		assertEquals(hourExpected, hourActual);
 		
 		float minuteExpected = calendar.get(Calendar.MINUTE);
-		float minuteActual = Float.parseFloat(lp.getText(By.id("info_hora_actual")).substring(3, 5));
+		float minuteActual = Float.parseFloat(hourStr.substring(3, hourStr.length()));
 		
 		assertEquals(minuteExpected, minuteActual, 1);
 		
@@ -146,7 +148,38 @@ public class LiquidacionesTest {
 	
 	@Test
 	public void CP_007_VerificarHoraFinal() {
-		fail("Áún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		lp = ip.getMenu().goToLiquidaciones();
+		lp.pressButton(By.cssSelector("a[href=\"#detalle5\"]"));
+		lp.pressButton(By.className("btn_terminar"));
+		
+		try {
+			Thread.sleep(3000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		lp.pressButton(By.cssSelector("a[href=\"#detalle5\"]"));
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		String date_str = lp.getText(By.xpath("//*[@id=\"detalle5\"]/div/div/div[2]/div[3]/div[1]/div/div[2]/ul/li[3]/i"));
+		
+		String hour_str = date_str.substring(date_str.length()-5, date_str.length());
+		
+		float actualHour = Float.parseFloat(hour_str.substring(0, 2));
+		float expectedHour = calendar.get(Calendar.HOUR_OF_DAY);
+
+		assertEquals(expectedHour, actualHour, 1);
+		
+		float actualMinutes = Float.parseFloat(hour_str.substring(3, 5));
+		float expectedMinutes = calendar.get(Calendar.MINUTE);
+		
+		assertEquals(expectedMinutes, actualMinutes, 1);
+		
 	}
 	
 	@Test
@@ -159,9 +192,9 @@ public class LiquidacionesTest {
 		lp.pressNuevaLiquidacionModalButton();
 		lp.enterPlaca(Data.placa);
 		lp.enterCedula(Data.cedula);
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"132\"]"));
 		
-		int expected = 22000;
+		int expected = 30;
 		int actual = Integer.parseInt(lp.getText(By.id("valor_subtotal")));
 		
 		assertEquals(expected, actual);
@@ -178,12 +211,12 @@ public class LiquidacionesTest {
 		lp.pressNuevaLiquidacionModalButton();
 		lp.enterPlaca(Data.placa);
 		lp.enterCedula(Data.cedula);
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"107\"]"));
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"111\"]"));
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"117\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"132\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"136\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"151\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"152\"]"));
 		
-		int expected = 22000 + 20000 + 38000;
+		int expected = 15;
 		int actual = Integer.parseInt(lp.getText(By.id("valor_descuento")));
 		
 		assertEquals(expected, actual);
@@ -200,10 +233,10 @@ public class LiquidacionesTest {
 		lp.pressNuevaLiquidacionModalButton();
 		lp.enterPlaca(Data.placa);
 		lp.enterCedula(Data.cedula);
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"101\"]"));
-		lp.pressServicioCheckbox(By.cssSelector("input[value=\"111\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"132\"]"));
+		lp.pressServicioCheckbox(By.cssSelector("input[value=\"136\"]"));
 		
-		int expected = 22000 + 20000;
+		int expected = 30 + 15;
 		int actual = Integer.parseInt(lp.getText(By.id("valor_total")));
 		
 		assertEquals(expected, actual);
@@ -212,6 +245,20 @@ public class LiquidacionesTest {
 	
 	@Test
 	public void CP_011_VerificarCamposRestringidos() {
-		fail("Áún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		lp = ip.getMenu().goToLiquidaciones();
+		lp.pressNuevaLiquidacionModalButton();
+		lp.enterPlaca(Data.placa);
+		lp.enterCedula(Data.cedula);
+		lp.sendKeys(By.id("inp_precio"), "35");
+		
+		int expected = 35;
+		int actual = Integer.parseInt(lp.getInputValue(By.id("inp_precio")));
+		
+		assertNotEquals(expected, actual);
+		
 	}
 }

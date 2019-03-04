@@ -9,14 +9,12 @@ public abstract class BasePage {
 	
 	private WebDriver driver;
 	private MenuNavegacion menu;
-	private By title;
 	WebDriverWait wait;
 	
 	public BasePage(WebDriver driver) {
 		this.driver = driver;
 		menu = new MenuNavegacion(driver);
-		title = By.cssSelector("body > div.container-fluid.title_maestro.bg-indigo > div > div > h2");
-		wait = new WebDriverWait(getDriver(), 5000);
+		wait = new WebDriverWait(getDriver(), 5);
 	}
 	
 	public MenuNavegacion getMenu() {
@@ -28,16 +26,29 @@ public abstract class BasePage {
 	}
 	
 	public String getTitle() {
-		return driver.findElement(title).getText();
+		return this.driver.getCurrentUrl();
 	}
 	
 	public String getAlertMessage(By selector) {
-		wait.until(ExpectedConditions.presenceOfElementLocated(selector));
-		return getDriver().findElement(selector).getText();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+		return driver.findElement(selector).getText();
 	}
 	
 	public String getText(By selector) {
-		return getDriver().findElement(selector).getText();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(selector));
+		return driver.findElement(selector).getText();
+	}
+	
+	public String getInputValue(By selector) {
+		return wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).getAttribute("value");
+	}
+	
+	public void sendKeys(By selector, String value) {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).sendKeys(value);;
+	}
+	
+	public void pressButton(By selector) {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).click();
 	}
 	
 }

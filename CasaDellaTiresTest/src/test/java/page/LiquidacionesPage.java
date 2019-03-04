@@ -9,6 +9,7 @@ public class LiquidacionesPage extends BasePage{
 	private By cedulaField;
 	private By placaField;
 	private By crearLiquidacionButton;
+	private By confirmarButton;
 	
 	public LiquidacionesPage(WebDriver driver) {
 		
@@ -17,7 +18,7 @@ public class LiquidacionesPage extends BasePage{
 		cedulaField = By.name("cc");
 		placaField = By.name("placa");
 		crearLiquidacionButton = By.id("sbt_new_lqd");
-		
+		confirmarButton = By.id("btn_confirmar");
 	}
 	
 	public void enterCedula(int cedula) {
@@ -38,6 +39,10 @@ public class LiquidacionesPage extends BasePage{
 	
 	public void pressCrearLiquidacionButton() {
 		getDriver().findElement(crearLiquidacionButton).click();
+	}
+	
+	public void pressConfirmarButton() {
+		getDriver().findElement(confirmarButton).click();
 	}
 	
 }
