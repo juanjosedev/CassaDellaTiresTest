@@ -5,11 +5,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import utils.Data;
+
 public abstract class BasePage {
 	
 	private WebDriver driver;
 	private MenuNavegacion menu;
-	WebDriverWait wait;
+	protected WebDriverWait wait;
 	
 	public BasePage(WebDriver driver) {
 		this.driver = driver;
@@ -49,6 +51,11 @@ public abstract class BasePage {
 	
 	public void pressButton(By selector) {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).click();
+	}
+	
+	public void closeModal() {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[data-dismiss=\"modal\"]"))).click();
+		Data.waiting();
 	}
 	
 }

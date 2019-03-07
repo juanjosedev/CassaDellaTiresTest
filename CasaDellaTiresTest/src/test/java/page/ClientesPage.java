@@ -2,6 +2,7 @@ package page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class ClientesPage extends BasePage{
 
@@ -16,7 +17,7 @@ public class ClientesPage extends BasePage{
 	
 	public ClientesPage(WebDriver driver) {
 		super(driver);
-		nuevoClienteModalButton = By.cssSelector("a[href=\"#agregarCliente\"]");
+		nuevoClienteModalButton = By.cssSelector("a[href=\"#agregarCliente \"]");
 		cedulaField = By.name("cc_agregar");
 		nombreField = By.name("nombre");
 		primerApellidoField = By.name("primer_apellido");
@@ -28,7 +29,7 @@ public class ClientesPage extends BasePage{
 	}
 	
 	public void pressNuevoClienteModalButton() {
-		getDriver().findElement(nuevoClienteModalButton).click();
+		pressButton(nuevoClienteModalButton);
 	}
 	
 	public void enterCedula(String cedula) {
@@ -56,7 +57,7 @@ public class ClientesPage extends BasePage{
 	}
 
 	public void pressAgregarButton() {
-		getDriver().findElement(agregarButton).click();
+		pressButton(agregarButton);
 	}
 	
 }

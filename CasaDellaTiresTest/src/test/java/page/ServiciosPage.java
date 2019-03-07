@@ -2,6 +2,7 @@ package page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class ServiciosPage extends BasePage{
 
@@ -17,23 +18,24 @@ public class ServiciosPage extends BasePage{
 	}
 	
 	public void enterNombreServicio(String nombreServicio) {
-		getDriver().findElement(nombreServicioField).sendKeys(nombreServicio);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(nombreServicioField)).sendKeys(nombreServicio);
 	}
 	
 	public void enterPrecioServicioTipoVehiculo(String precio, By selector) {
-		getDriver().findElement(selector).sendKeys(precio);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).sendKeys(precio);
 	}
 	
 	public void pressTipoVehiculoCheckbox(By selector) {
-		getDriver().findElement(selector).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(selector)).click();
 	}
 	
 	public void pressNuevoServicioModalButton() {
-		getDriver().findElement(nuevoServicioModalButton).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(nuevoServicioModalButton)).click();
 	}
 	
 	public void pressCrearServicioButton() {
-		getDriver().findElement(crearServicioButton).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(crearServicioButton)).click();
+//		getDriver().findElement(crearServicioButton).click();
 	}
 	
 }

@@ -12,4 +12,24 @@ public abstract class Data {
 	public static final int cedula = 1311;
 	public static final String placa = "QWE789";
 	
+	public static void waiting() {
+		
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static void waiting(int milliseconds) {
+		
+		try {
+			Thread.sleep(milliseconds);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

@@ -47,18 +47,18 @@ public class ClientesTest {
 		ip = new InicioPage(driver);
 		cp = ip.getMenu().goToClientes();
 		cp.pressNuevoClienteModalButton();
-		cp.enterCedula("9999");
-		cp.enterNombre("nombre");
-		cp.enterPrimerApellido("primerApellido");
-		cp.enterSegundoApellido("segundoApellido");
+		cp.enterCedula("1012");
+		cp.enterNombre("Mariano");
+		cp.enterPrimerApellido("Delgado");
+		cp.enterSegundoApellido("");
 		cp.enterTelefeno("5168512");
-		cp.enterDireccion("direccion");
+		cp.enterDireccion("Andalucía");
 		cp.pressAgregarButton();
 		
 		String expected = "El cliente se registró correctamente";
 		String actual = cp.getAlertMessage(By.id("alert_agregar_exitoso"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
@@ -70,21 +70,21 @@ public class ClientesTest {
 		ip = new InicioPage(driver);
 		cp = ip.getMenu().goToClientes();
 		cp.pressNuevoClienteModalButton();
-		cp.enterCedula("1311");
-		cp.enterNombre("nombre");
-		cp.enterPrimerApellido("primerApellido");
-		cp.enterSegundoApellido("segundoApellido");
-		cp.enterTelefeno("5168512");
-		cp.enterDireccion("direccion");
+		cp.enterCedula("1321");
+		cp.enterNombre("Alicia");
+		cp.enterPrimerApellido("Sanz");
+		cp.enterSegundoApellido("");
+		cp.enterTelefeno("");
+		cp.enterDireccion("");
 		cp.pressAgregarButton();
 		
 		String expected = "Cédula ya registrada";
 		String actual = cp.getAlertMessage(By.id("alert_agregar_error"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
-	
+
 	@Test
 	public void CP_003_ObligatoriedadCedula() {
 		
@@ -93,13 +93,12 @@ public class ClientesTest {
 		ip = new InicioPage(driver);
 		cp = ip.getMenu().goToClientes();
 		cp.pressNuevoClienteModalButton();
-		cp.enterCedula("");
 		cp.pressAgregarButton();
 		
 		String expected = "Rellena el campo cédula";
-		String actual = cp.getAlertMessage(By.cssSelector("#alert_validacion_cc var"));
+		String actual = cp.getAlertMessage(By.id("alert_validacion_cc"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
@@ -115,9 +114,9 @@ public class ClientesTest {
 		cp.pressAgregarButton();
 		
 		String expected = "Rellena el campo nombre";
-		String actual = cp.getAlertMessage(By.cssSelector("#alert_agregar_nombre var"));
+		String actual = cp.getAlertMessage(By.id("alert_agregar_nombre"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
@@ -129,14 +128,14 @@ public class ClientesTest {
 		ip = new InicioPage(driver);
 		cp = ip.getMenu().goToClientes();
 		cp.pressNuevoClienteModalButton();
-		cp.enterCedula("1311");
-		cp.enterNombre("nombre");
+		cp.enterCedula("1012");
+		cp.enterNombre("Mariano");
 		cp.pressAgregarButton();
 		
 		String expected = "Rellena el campo primer apellido";
-		String actual = cp.getAlertMessage(By.cssSelector("#alert_agregar_apellido var"));
+		String actual = cp.getAlertMessage(By.id("alert_agregar_apellido"));
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
@@ -147,7 +146,20 @@ public class ClientesTest {
 	
 	@Test
 	public void CP_007_ModificarCampoUnicosCedula() {
-		fail("Aún no implementado");
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		cp = ip.getMenu().goToClientes();
+		cp.pressButton(By.cssSelector("a[href=\"Clientes.jsp?user=1321\"]"));
+		cp.pressButton(By.cssSelector("a[href=\"#modificarCliente1321\"]"));
+		cp.sendKeys(By.id("cc"), "1322");
+		
+		int expected = 1321;
+		int actual = Integer.parseInt(cp.getInputValue(By.id("cc")));
+		
+		assertEquals(expected, actual);
+		
 	}
 	
 }

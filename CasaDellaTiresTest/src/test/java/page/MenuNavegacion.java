@@ -2,6 +2,10 @@ package page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import utils.Data;
 
 public class MenuNavegacion {
 
@@ -14,6 +18,7 @@ public class MenuNavegacion {
 	private By operadoresButtonNav;
 //	private By cuentaButtonNav;
 	private By cerrarSesionButtonNav;
+	protected WebDriverWait wait;
 	
 	public MenuNavegacion(WebDriver driver) {
 		this.driver = driver;
@@ -25,6 +30,7 @@ public class MenuNavegacion {
 		operadoresButtonNav = By.cssSelector("a[href=\"Operadores.jsp\"]");
 //		cuentaButtonNav = By.cssSelector("a[href=\"#\"]");
 		cerrarSesionButtonNav = By.cssSelector("a[href=\"../../index.jsp\"]");
+		wait = new WebDriverWait(driver, 5);
 	}
 	
 	public InicioPage goToInicio() {
@@ -58,7 +64,7 @@ public class MenuNavegacion {
 	}
 	
 	public void cerrarSesion() {
-		driver.findElement(cerrarSesionButtonNav).click();
+		wait.until(ExpectedConditions.elementToBeClickable(cerrarSesionButtonNav)).click();
 	}
 	
 }

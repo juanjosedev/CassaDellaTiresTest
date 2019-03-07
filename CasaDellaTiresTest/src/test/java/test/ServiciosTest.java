@@ -47,22 +47,25 @@ public class ServiciosTest {
 		ip = new InicioPage(driver);
 		sp = ip.getMenu().goToServiciosPage();
 		sp.pressNuevoServicioModalButton();
-		sp.enterNombreServicio("NuevoServicio");
+		sp.enterNombreServicio("Balanceo");
 		sp.pressTipoVehiculoCheckbox(By.cssSelector("input[value=\"12\"]"));
-		sp.enterPrecioServicioTipoVehiculo("50000", By.xpath("//*[@id=\"inp_precio\"]"));
+		sp.enterPrecioServicioTipoVehiculo("29", By.xpath("//*[@id=\"inp_precio\"]"));
 		sp.pressCrearServicioButton();
 		
 		String expected = "Se ha registrado un nuevo servicio con éxito";
 		String actual = sp.getAlertMessage(By.cssSelector(".alert-success var"));
 		
-		assertEquals(expected, actual);
+		sp.closeModal();
+		sp.getMenu().cerrarSesion();
+		
+		assertTrue(actual.contains(expected));
 		
 	}
 	
-	@Test
-	public void CP_002_CrearServicioIDRegistrada() {
-		fail("Áún no implementado");
-	}
+//	@Test
+//	public void CP_002_CrearServicioIDRegistrada() {
+//		fail("Áún no implementado");
+//	}
 	
 	@Test
 	public void CP_003_ObligatoriedadDelID() {
@@ -75,54 +78,87 @@ public class ServiciosTest {
 		sp.pressCrearServicioButton();
 		
 		String expected = "El campo nombre es obligatorio";
-		String actual = sp.getAlertMessage(By.id("alt_servicio"));
+		String actual = sp.getAlertMessage(By.cssSelector("#alt_servicio #msg"));
 		
-		assertEquals(expected, actual);
+		sp.closeModal();
+		sp.getMenu().cerrarSesion();
+		
+		assertTrue(actual.contains(expected));
 		
 	}
 	
 	@Test
 	public void CP_004_ObligatoriedadDelTipoDeVehiculo() {
+		
 		isp = new InicioSesionPage(driver);
 		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
 		ip = new InicioPage(driver);
 		sp = ip.getMenu().goToServiciosPage();
 		sp.pressNuevoServicioModalButton();
-		sp.enterNombreServicio("nombreServicio");
+		sp.enterNombreServicio("Balanceo");
 		sp.pressCrearServicioButton();
 		
 		String expected = "Tienes que escoger un servicio";
-		String actual = sp.getAlertMessage(By.id("alt_crear_error"));
+		String actual = sp.getAlertMessage(By.cssSelector("#alt_crear_error #msg"));
+
+		sp.closeModal();
+		sp.getMenu().cerrarSesion();
 		
-		assertEquals(expected, actual);
+		assertTrue(actual.contains(expected));
 		
 	}
 	
 	@Test
-	public void CP_005_ModificarCamposObligatorios() {
-		fail("Áún no implementado");
+	public void CP_005_ModificarCamposUnicosTipoDeVehiculos() {
+		
+		isp = new InicioSesionPage(driver);
+		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
+		ip = new InicioPage(driver);
+		sp = ip.getMenu().goToServiciosPage();
+		sp.pressButton(By.cssSelector("a[href=\"Servicios2.jsp?servicio=Lavado\"]"));
+		sp.pressButton(By.cssSelector("a[href=\"#editarDetalle132\"]"));
+		sp.sendKeys(By.id("inp_id_update"), "135");
+		sp.sendKeys(By.id("inp_nombre_update"), "Bus");
+		
+		int expectedID = 132;
+		int actualID = Integer.parseInt(sp.getInputValue(By.id("inp_id_update")));
+		
+		String expectedTipoVehiculo = "Automóvil";
+		String actualTipoVehiculo = sp.getInputValue(By.id("inp_nombre_update"));
+		
+		assertTrue(expectedID == actualID && expectedTipoVehiculo.equals(actualTipoVehiculo));
+		
+//		sp.closeModal();
+//		sp.getMenu().cerrarSesion();
+		
 	}
-	
+
 	@Test
-	public void CP_006_ModificarCamposUnicosTipoDeVehiculos() {
-		fail("Áún no implementado");
-	}
-	
-	@Test
-	public void CP_007_VerificarTipoDeDatoCampoPrecio() {
+	public void CP_006_VerificarTipoDeDatoCampoPrecio() {
+		
 		isp = new InicioSesionPage(driver);
 		isp.sendForm(Data.userAdmin, Data.passwordAdmin);
 		ip = new InicioPage(driver);
 		sp = ip.getMenu().goToServiciosPage();
 		sp.pressNuevoServicioModalButton();
-		sp.enterNombreServicio("nombreServicio");
+		sp.enterNombreServicio("Balanceo");
 		sp.pressTipoVehiculoCheckbox(By.cssSelector("input[value=\"12\"]"));
-		sp.enterPrecioServicioTipoVehiculo("letras", By.className("inp_precio"));
+		sp.enterPrecioServicioTipoVehiculo("docientosquintillonesdedolares", By.className("inp_precio"));
+		sp.pressCrearServicioButton();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		String expected = "Precio no válido";
-		String actual = sp.getAlertMessage(By.id("alt_crear_error"));
+		String actual = sp.getAlertMessage(By.cssSelector("#alt_crear_error #msg"));
 		
-		assertEquals(expected, actual);
+		sp.closeModal();
+		sp.getMenu().cerrarSesion();
+		
+		assertTrue(actual.contains(expected));
 		
 	}
 	
